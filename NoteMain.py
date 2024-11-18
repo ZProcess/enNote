@@ -22,7 +22,7 @@ note_text.config(state=tk.DISABLED)  # 禁用文本框编辑
 menu = tk.Menu(file_list, tearoff=0)
 menu.add_command(label="新增文件", command=lambda: add_new_list(file_list, root))
 menu.add_command(label="删除", command=lambda: delete_selected_item(file_list, note_text))
-
+menu.add_command(label="重命名", command=lambda: rename_file(file_list, note_text))
 # 绑定右键点击事件
 file_list.bind("<Button-3>", lambda event: right_click(event, menu))
 file_list.bind('<Button-1>', lambda event: on_list_item_click(event, file_list, note_text))

@@ -189,3 +189,27 @@ def delete_selected_item(file_list, note_text):
 
 def closeDb():
     conn.close()
+
+# 重命名文件
+def rename_file(file_list, note_text):
+    try:
+        # 获取当前选中的文件名
+        selected_index = file_list.curselection()[0]
+        current_name = file_list.get(selected_index)
+        # 弹出对话框让用户输入新文件名
+        new_name = simpledialog.askstring("重命名", "请输入新的文件名称:", initialvalue=current_name)
+        if new_name and new_name != current_name:
+            # 更新列表框中的文件名
+            file_list.delete(selected_index)
+            file_list.insert(selected_index, new_name)
+            notes_dir = 'notes'
+            # 更新文件系统中的文件名
+            current_path = os.path.join(notes_dir, f"{current_name}.txt")
+             # 指定文件所在的路径
+            new_path = os.path.join(notes_dir, f"{new_name}.txt")
+            os.rename(current_path, new_path)
+            # 更新数据库中的文件名
+            cursor.execute("UPDATE lists SET name = ?,filepath = ? WHERE name = ?", (new_name, new_path,current_name))
+            conn.commit()
+    except IndexError:
+        messagebox.showerror("错误", "没有选择任何文件。")
